@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: really_secure_password
+  flyway:
+    enabled: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+database:
+  fresh-schema-on-start: true
+frontend:
+  username: frontend_user
+  password: really_secure_password
+  url: http://localhost:4200
