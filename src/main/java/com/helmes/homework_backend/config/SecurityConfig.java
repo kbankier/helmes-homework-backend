@@ -28,14 +28,11 @@ public class SecurityConfig {
     @Value("${spring.h2.console.path}")
     private String h2ConsolePath;
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    @Value("${auth.username}")
+    private String username;
 
-    @Value("${frontend.username}")
-    private String frontendUser;
-
-    @Value("${frontend.password}")
-    private String frontendPassword;
+    @Value("${auth.password}")
+    private String password;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,10 +52,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(frontendUrl));
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -67,9 +63,8 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.withUsername(frontendUser)
-                .password(passwordEncoder.encode(frontendPassword))
-                .roles("USER")
+        UserDetails user = User.withUsername(username)
+                .password(passwordEncoder.encode(password))
                 .build();
         return new InMemoryUserDetailsManager(user);
     }

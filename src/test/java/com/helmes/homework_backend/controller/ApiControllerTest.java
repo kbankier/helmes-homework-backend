@@ -1,4 +1,4 @@
-package com.helmes.homework_backend.test.integration;
+package com.helmes.homework_backend.controller;
 
 import com.helmes.homework_backend.dto.UserDataRequestDTO;
 import com.helmes.homework_backend.dto.UserDataResponseDTO;
@@ -14,20 +14,20 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ApiControllerIT {
+public class ApiControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Value("${frontend.username}")
-    private String frontendUser;
+    @Value("${auth.username}")
+    private String username;
 
-    @Value("${frontend.password}")
-    private String frontendPassword;
+    @Value("${auth.password}")
+    private String password;
 
     @Test
     public void getSectors_authenticatedUser_returnsOk() {
-        ResponseEntity<Object[]> response = restTemplate.withBasicAuth(frontendUser, frontendPassword)
+        ResponseEntity<Object[]> response = restTemplate.withBasicAuth(username, password)
                 .getForEntity("/api/sectors", Object[].class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -47,7 +47,7 @@ public class ApiControllerIT {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserDataRequestDTO> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<Map> response = restTemplate.withBasicAuth(frontendUser, frontendPassword)
+        ResponseEntity<Map> response = restTemplate.withBasicAuth(username, password)
                 .postForEntity("/api/user-data", entity, Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -68,7 +68,7 @@ public class ApiControllerIT {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserDataRequestDTO> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<UserDataResponseDTO> createResponse = restTemplate.withBasicAuth(frontendUser, frontendPassword)
+        ResponseEntity<UserDataResponseDTO> createResponse = restTemplate.withBasicAuth(username, password)
                 .postForEntity("/api/user-data", entity, UserDataResponseDTO.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -80,7 +80,7 @@ public class ApiControllerIT {
 
         request.setName("Other Name");
         HttpEntity<UserDataRequestDTO> updateEntity = new HttpEntity<>(request, headers);
-        ResponseEntity<UserDataResponseDTO> updateResponse = restTemplate.withBasicAuth(frontendUser, frontendPassword)
+        ResponseEntity<UserDataResponseDTO> updateResponse = restTemplate.withBasicAuth(username, password)
                 .exchange("/api/user-data/" + id, HttpMethod.PUT, updateEntity, UserDataResponseDTO.class);
 
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);

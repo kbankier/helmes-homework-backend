@@ -14,7 +14,6 @@ spring:
         web-allow-others: true
 database:
   fresh-schema-on-start: true
-frontend:
+auth:
   username: frontend_user
   password: really_secure_password
-  url: http://localhost:4200
